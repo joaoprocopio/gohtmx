@@ -17,7 +17,7 @@
 {{ end }}
 
 {{ block "form" . }}
-  <form hx-post="/contacts">
+  <form hx-target="#contacts" hx-swap="outerHTML" hx-post="/contacts">
     <label for="name">name</label>
     <input type="text" name="name" />
 
@@ -29,12 +29,12 @@
 {{ end }}
 
 {{ block "contacts" . }}
-  <div  style="display: flex; flex-direction: column;">
+  <div id="contacts" style="display: flex; flex-direction: column;">
     {{ range .Contacts }}
       <div>
-       Name: <span>{{ .Name }}</span>
-       Email: <span>{{ .Email }}</span>
+        Name: <span>{{ .Name }}</span>
+        Email: <span>{{ .Email }}</span>
       </div>
     {{ end }}
-  </div>
+  </di>
 {{ end }}
