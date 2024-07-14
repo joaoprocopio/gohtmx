@@ -6,19 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script
       src="https://unpkg.com/htmx.org@2.0.1" integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/" crossorigin="anonymous"></script>
-    <title>Document</title>
+    <title>contacts</title>
   </head>
 
   <body>
-    <div id="counter">
-      {{ template "count" . }}
-    </div>
-
-    <button hx-target="#counter" hx-post="/count">Count</button>
+    {{ template "form" . }}
+    {{ template "contacts" . }}
   </body>
 </html>
 {{ end }}
 
-{{ block "count" . }}
-  Count {{ .Count }}
+{{ block "form" . }}
+  <form hx-post="/contacts">
+    <label for="name">name</label>
+    <input type="text" name="name" />
+
+    <label for="email">email</label>
+    <input type="email" name="email" />
+
+    <button type="submit">Create contact</button>
+  </form>
+{{ end }}
+
+{{ block "contacts" . }}
+  <div  style="display: flex; flex-direction: column;">
+    {{ range .Contacts }}
+      <div>
+       Name: <span>{{ .Name }}</span>
+       Email: <span>{{ .Email }}</span>
+      </div>
+    {{ end }}
+  </div>
 {{ end }}
