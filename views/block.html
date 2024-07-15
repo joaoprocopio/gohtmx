@@ -1,29 +1,51 @@
 {{ block "index" . }}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script
-      src="https://unpkg.com/htmx.org@2.0.1" integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/" crossorigin="anonymous"></script>
-    <title>contacts</title>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script
+    src="https://unpkg.com/htmx.org@2.0.1" integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/" crossorigin="anonymous"></script>
+  <title>contacts</title>
+</head>
 
-  <body>
-    {{ template "form" . }}
-    <hr />
-    {{ template "contacts" . }}
-  </body>
+<body>
+  {{ template "form" .Form }}
+  <hr />
+  {{ template "contacts" .Data }}
+  <script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+      document.body.addEventListener("htmx:beforeSwap", function (event) {
+        if (event.detail.xhr.status === 422) {
+          event.detail.shouldSwap = true;
+          event.detail.isError = false;
+        }
+      })
+    })
+  </script>
+</body>
 </html>
 {{ end }}
 
 {{ block "form" . }}
-<form hx-target="#contacts" hx-swap="outerHTML" hx-post="/contacts">
+<form hx-swap="outerHTML" hx-post="/contacts">
   <label for="name">name</label>
-  <input type="text" name="name" />
+  <input
+    type="text"
+    name="name"
+    {{ if .Values.name }} value="{{ .Values.name }}" {{ end }}
+  />
 
   <label for="email">email</label>
-  <input type="email" name="email" />
+  <input
+    type="email"
+    name="email"
+    {{ if .Values.email }} value="{{ .Values.email }}" {{ end }}
+  />
+
+  {{ if .Errors.email }}
+    <div style="color: red;">{{ .Errors.email }}</div>
+  {{ end }}
 
   <button type="submit">Create contact</button>
 </form>
